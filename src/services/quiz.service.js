@@ -36,10 +36,7 @@ export class QuizService {
       if (searchString) {
         query = { title: { $regex: searchString, $options: "i" } };
       }
-      const quizzes = await this.quizModel
-        .find(query)
-        .populate("questions")
-        .exec();
+      const quizzes = await this.quizModel.find(query);
       return quizzes;
     } catch (error) {
       throw error;
