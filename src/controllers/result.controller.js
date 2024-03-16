@@ -33,10 +33,27 @@ export class ResultController {
     }
   }
 
-  async getAllResults(req, res, next) {
+  async getAllResultsForQuiz(req, res, next) {
     try {
-      const { searchString } = req.query;
-      const results = await this.resultService.getAllResults(searchString);
+      const results = await this.resultService.getAllResultsForQuiz(
+        req.params.quizId
+      );
+      res.status(200).json({
+        statusCode: 200,
+        message: "Results retrieved successfully",
+        payload: results,
+      });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+
+  async getAllResultsForUser(req, res, next) {
+    try {
+      const results = await this.resultService.getAllResultsForUser(
+        req.params.userId
+      );
       res.status(200).json({
         statusCode: 200,
         message: "Results retrieved successfully",

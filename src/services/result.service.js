@@ -1,7 +1,4 @@
-import {
-  NotFoundException,
-  ConflictException,
-} from "../exceptions/http-exceptions";
+import { NotFoundException } from "../exceptions/http-exceptions";
 import ResultModel from "../models/result.model";
 
 export class ResultService {
@@ -30,15 +27,18 @@ export class ResultService {
     }
   }
 
-  async getAllResults(searchString) {
+  async getAllResultsForQuiz(quizId) {
     try {
-      let query = {};
-      if (searchString) {
-        query = {
-          /* Define your search criteria here */
-        };
-      }
-      const results = await this.resultModel.find(query);
+      const results = await this.resultModel.find({ quiz: quizId });
+      return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAllResultsForUser(userId) {
+    try {
+      const results = await this.resultModel.find({ user: userId });
       return results;
     } catch (error) {
       throw error;
