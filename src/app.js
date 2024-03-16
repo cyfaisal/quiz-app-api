@@ -10,6 +10,8 @@ import "./config/jwt.config";
 import docs from "./docs";
 import indexRouter from "./routes/index";
 import { HttpException, NotFoundException } from "./exceptions/http-exceptions";
+import User from "./models/user.model";
+import EncryptionUtil from "./utils/helpers/encryption.util";
 
 const app = express();
 connect(app);
@@ -79,8 +81,28 @@ function onError(error) {
   }
 }
 
-function onListening() {
-  const addr = server.address();
-  const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  console.log("Listening on " + bind);
+async function onListening() {
+  try {
+    const addr = server.address();
+    const bind =
+      typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+    console.log("Listening on " + bind);
+
+    // Check if an admin user already exists
+    const existingAdmin = await User.findOne({ role: "admin" });
+    if (existingAdmin) {
+      console.log("Admin user already exists");
+    } else {
+      const encryptionUtil = new EncryptionUtil();
+      await User.create({
+        username: "admin",
+        email: "admin@example.com",
+        password: await encryptionUtil.hashPlainText("password"),
+        role: "admin",
+      });
+      console.log("Admin user created successfully");
+    }
+  } catch (err) {
+    console.error("Error:", err);
+  }
 }
