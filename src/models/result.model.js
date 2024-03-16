@@ -20,8 +20,14 @@ const resultSchema = new Schema(
           required: true,
         },
         selectedOption: {
-          type: Schema.Types.ObjectId,
-          ref: "Option",
+          optionText: {
+            type: String,
+            required: true,
+          },
+          isCorrect: {
+            type: Boolean,
+            required: true,
+          },
         },
       },
     ],
